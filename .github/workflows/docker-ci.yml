@@ -1,0 +1,64 @@
+name: Docker CI/CD Pipeline
+
+
+# specifies when the workflow is triggered 
+on:
+  push:
+    branches:
+      - dev
+      - prod
+
+jobs:
+  # Job to build and push the Docker image to dev
+  push_image_dev:
+    runs-on: ubuntu-latest 
+    if: github.ref == 'refs/heads/dev' # Checks it the current branch is definitely dev
+    services:
+      docker:
+        image: docker:20.10-dind # The docker in docker service is being used...
+        options: --privileged #This flag here gives the containter extended priviledges...
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # use the custom built action from the actions marketplace to checkout the repository code 
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2 # uses the docker marketplace option to build a docker image
+        
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        
+      - name: List repository contents 
+        run: | 
+          echo "Listing the repository contents to confirm the context in which docker is building from"
+          ls -R 
+
+      - name: List the contents of the Dockefile that is building the image 
+        run: | 
+          cat Dockerfile
+
+      - name: Build  Docker image to be uploaded to dev 
+        run: |
+          docker build -t ${{ secrets.DOCKER_IMAGE_DEV }}:latest . 
+
+      - name: Push the Docker image to container registry
+        run : |  
+          docker push ${{ secrets.DOCKER_IMAGE_DEV }}:latest
+
+  # Job to build the Docker image for prod
+  build_image_prod:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/prod'
+    services:
+      docker:
+        image: docker:20.10-dind
+        options: --privileged
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Build Docker image for prod
+        run: docker build -t ${{ secrets.DOCKER_IMAGE_PROD }}:latest .
+
