@@ -1,4 +1,4 @@
-#CI Image 
+# CI Image 
 
 The repository contains the build detail for the docker image that will be used for CI checks in other projects 
 
