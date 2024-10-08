@@ -5,7 +5,7 @@ name: Docker CI/CD Pipeline
 on:
   push:
     branches:
-      - test
+      - dev
 
 jobs:
   # Job to build and push the Docker image to dev
@@ -71,10 +71,10 @@ jobs:
         run: docker build -t ci_image_test .
 
       - name: Tag image to enable the push to the repository
-        run: docker tag ci_image_test:latest ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image_test:latest
+        run: docker tag ci_image_test:latest ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image:latest
 
       - name: Push the Image to the repository  
-        run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image_test:latest 
+        run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image:latest 
 
   # Job to build the Docker image for prod
   build_image_prod:
