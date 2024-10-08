@@ -11,9 +11,5 @@ WORKDIR /app
 # Copy the current requirements for the versions of black and flake8 that you want
 COPY requirements.txt /app/
 
-# Copy the script that will be used to run black and flake8 on files recognised. 
-COPY entrypoint.sh  /app/
-
 # Install the dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-
