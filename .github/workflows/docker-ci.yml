@@ -74,7 +74,7 @@ jobs:
         run: docker tag ci_image_test:latest ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image_test:latest
 
       - name: Push the Image to the repository  
-        run: docker push ci_image_test:latest ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image_test:latest
+        run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/ci_image_test:latest 
 
   # Job to build the Docker image for prod
   build_image_prod:
