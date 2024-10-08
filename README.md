@@ -1,10 +1,18 @@
-#CI Image 
+# CI Image 
 
-The repository contains the build detail for the docker image that will be used for CI checks in other projects 
+The repository contains the build detail for the docker image that will be used for CI checks in other projects. The dev branch contains the components of the CI image with Github Workflows to build and deploy to both Dockerhub and Amazon ECR. 
 
-Add the moment it will just build a docker image with flake8 and black in it.
+To call an use the docker image locally use the following commands for each check: 
 
-In part it will be used to check the percieved  benefits of having a custom image for linting and formatting checks:
+| Check type | Dockerhub command     |
+| ------------- | ------------- |
+| Black | docker run --rm -v $(pwd):/mnt jackb001/ci_image-dev black --check /mnt  |
+| pylint | docker run --rm -v $(pwd):/mnt jackb001/ci_image-dev pylint /mnt/*.py |
+| flake8 | docker  run --rm -v $(pwd):/mnt jackb001/ci_image-dev flake8 /mnt |
+
+Not all will have access to docker however - at a local level pre-commits referencing the versions of the linting packages used here should work - this image is more designed to assist with the checks made at remote level. 
+
+By creating the linting image the following percieved benefits are expected: 
 
 1. Speed: By suing a pre-built docker image with all dependeices we should avoid the time-consuming steps of settin gup the enviroment and installing packages each time the workflow runs 
 
